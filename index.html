@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Agrégation SVT — Contre-option Secteur A</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f0e;
+    --bg2: #141714;
+    --bg3: #1b1f1b;
+    --bg4: #222622;
+    --accent: #7ccf7c;
+    --accent2: #4aab6e;
+    --accent-dim: rgba(124,207,124,0.12);
+    --accent-dim2: rgba(124,207,124,0.06);
+    --text: #e8ede8;
+    --text2: #a8b5a8;
+    --text3: #6a7a6a;
+    --border: rgba(124,207,124,0.15);
+    --border2: rgba(124,207,124,0.28);
+    --red: #f07070;
+    --red-bg: rgba(240,112,112,0.1);
+    --orange: #f0b060;
+    --orange-bg: rgba(240,176,96,0.1);
+    --blue: #70a8f0;
+    --blue-bg: rgba(112,168,240,0.1);
+    --radius: 10px;
+    --radius-lg: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* BG GRID */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(124,207,124,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,207,124,0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  .site-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .logo-area h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.1;
+  }
+  .logo-area h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .logo-area p {
+    font-size: 13px;
+    color: var(--text3);
+    margin-top: 4px;
+    font-family: 'DM Mono', monospace;
+    font-weight: 400;
+  }
+  .header-badge {
+    background: var(--accent-dim);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  /* TOP NAV */
+  .top-nav {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 1.75rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: .75rem;
+  }
+  .nav-btn {
+    background: none;
+    border: none;
+    font-size: 13px;
+    font-weight: 400;
+    font-family: 'DM Sans', sans-serif;
+    padding: 6px 14px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    color: var(--text3);
+    transition: all .15s;
+    letter-spacing: 0.02em;
+  }
+  .nav-btn:hover { color: var(--text2); background: var(--accent-dim2); }
+  .nav-btn.active { background: var(--accent-dim); color: var(--accent); font-weight: 500; }
+
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeIn .2s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* HOME */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent2);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: .75rem;
+  }
+  .mode-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+  .mode-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1rem;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color .15s, background .15s, transform .15s;
+  }
+  .mode-card:hover {
+    border-color: var(--border2);
+    background: var(--bg3);
+    transform: translateY(-2px);
+  }
+  .mode-card .m-icon { font-size: 24px; margin-bottom: 8px; }
+  .mode-card .m-title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+  .mode-card .m-desc { font-size: 11.5px; color: var(--text3); line-height: 1.45; }
+
+  .tags-area { margin-top: 1rem; }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 3px 9px;
+    border-radius: 12px;
+    background: var(--accent-dim);
+    color: var(--accent);
+    border: 1px solid var(--border);
+    margin: 3px;
+  }
+
+  /* QUIZ */
+  .prog-bar {
+    height: 3px;
+    background: var(--bg4);
+    border-radius: 2px;
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+  }
+  .prog-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    border-radius: 2px;
+    transition: width .4s ease;
+  }
+  .quiz-stats {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    align-items: center;
+  }
+  .chip {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+  }
+  .chip span { color: var(--accent); font-weight: 500; }
+
+  .timer-wrap { height: 4px; background: var(--bg4); border-radius: 2px; margin-bottom: 1rem; overflow: hidden; }
+  .timer-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .1s linear, background .3s; }
+  .timer-fill.urgent { background: var(--red); }
+
+  .duo-banner {
+    text-align: center;
+    padding: .75rem;
+    background: var(--blue-bg);
+    border: 1px solid rgba(112,168,240,0.25);
+    border-radius: var(--radius);
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--blue);
+    margin-bottom: 1rem;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .q-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+  .cat-badge {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: var(--orange-bg);
+    color: var(--orange);
+    border: 1px solid rgba(240,176,96,0.25);
+    font-weight: 500;
+  }
+  .src-badge {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+    padding: 3px 9px;
+    background: var(--bg3);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+
+  .q-text {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--text);
+    margin-bottom: 1.1rem;
+    font-weight: 400;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+  }
+  .q-text::before {
+    content: '« ';
+    color: var(--accent);
+    font-style: normal;
+  }
+  .q-text::after {
+    content: ' »';
+    color: var(--accent);
+    font-style: normal;
+  }
+
+  .ans-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1rem; }
+  .ans-btn {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 13px;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--text2);
+    cursor: pointer;
+    text-align: left;
+    transition: border-color .12s, background .12s, transform .12s;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+  }
+  .ans-btn:hover:not(:disabled) {
+    border-color: var(--border2);
+    background: var(--bg3);
+    color: var(--text);
+    transform: translateX(2px);
+  }
+  .ans-btn.correct {
+    background: rgba(74,171,110,0.12);
+    border-color: rgba(74,171,110,0.5);
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .ans-btn.wrong {
+    background: var(--red-bg);
+    border-color: rgba(240,112,112,0.4);
+    color: var(--red);
+  }
+
+  .exp-box {
+    background: var(--bg2);
+    border-left: 3px solid var(--accent2);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 12px 14px;
+    font-size: 12.5px;
+    color: var(--text2);
+    margin-top: 8px;
+    line-height: 1.7;
+    font-weight: 300;
+    display: none;
+    animation: slideIn .2s ease;
+  }
+  @keyframes slideIn { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform:none; } }
+
+  /* BUTTONS */
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    padding: 9px 20px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: opacity .15s, transform .15s;
+  }
+  .btn-primary:hover { opacity: .88; transform: translateY(-1px); }
+  .btn-secondary {
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    padding: 9px 16px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: border-color .15s, color .15s;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1.25rem; }
+  .next-btn { display: none; }
+
+  /* RESULTS */
+  .score-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    text-align: center;
+    margin: 1rem 0;
+  }
+  .score-big {
+    font-family: 'Fraunces', serif;
+    font-size: 52px;
+    font-weight: 600;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .score-sub { font-size: 13px; color: var(--text3); margin-top: 6px; font-family: 'DM Mono', monospace; }
+
+  .res-list { margin-top: .5rem; }
+  .res-label { font-size: 12px; font-family: 'DM Mono', monospace; color: var(--text3); margin-bottom: .5rem; letter-spacing: .05em; }
+  .res-item {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    margin-bottom: 7px;
+    font-size: 12px;
+  }
+  .res-q { color: var(--text2); font-weight: 400; margin-bottom: 4px; line-height: 1.5; }
+  .res-ok { color: var(--accent); margin-top: 2px; }
+  .res-no { color: var(--red); margin-top: 1px; }
+  .duo-scores {
+    display: flex;
+    gap: 3rem;
+    justify-content: center;
+    align-items: center;
+  }
+  .duo-score-box { text-align: center; }
+  .duo-score-box .score-big { font-size: 46px; }
+  .duo-score-box .score-sub { margin-top: 4px; }
+
+  /* FICHES */
+  .fiche-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+  }
+  .ftab {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    color: var(--text3);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    transition: all .15s;
+  }
+  .ftab:hover { border-color: var(--border2); color: var(--text2); }
+  .ftab.active { background: var(--accent-dim); border-color: var(--border2); color: var(--accent); font-weight: 500; }
+
+  .fiche-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    animation: fadeIn .2s ease;
+  }
+  .fiche-h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    padding-bottom: .75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .fiche-section { margin-bottom: 1.25rem; }
+  .fiche-h3 {
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    margin-bottom: .5rem;
+    font-weight: 500;
+  }
+  .fiche-p {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.75;
+    font-weight: 300;
+    margin-bottom: .35rem;
+  }
+  .fiche-p strong { color: var(--text); font-weight: 500; }
+  .fiche-formula {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    color: var(--accent);
+    margin: .5rem 0;
+    letter-spacing: .02em;
+  }
+  .fiche-alert {
+    background: var(--red-bg);
+    border: 1px solid rgba(240,112,112,0.22);
+    border-radius: var(--radius);
+    padding: 9px 13px;
+    font-size: 12.5px;
+    color: var(--red);
+    margin: .5rem 0;
+    line-height: 1.6;
+  }
+  .fiche-tip {
+    background: rgba(74,171,110,0.08);
+    border: 1px solid rgba(74,171,110,0.22);
+    border-radius: var(--radius);
+    padding: 9px 13px;
+    font-size: 12.5px;
+    color: var(--accent2);
+    margin: .5rem 0;
+    line-height: 1.6;
+  }
+  .fiche-key {
+    display: inline-block;
+    background: var(--orange-bg);
+    color: var(--orange);
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 2px 9px;
+    border-radius: 10px;
+    border: 1px solid rgba(240,176,96,0.22);
+    margin: 2px;
+  }
+
+  @media (max-width: 600px) {
+    .mode-grid { grid-template-columns: 1fr; }
+    .ans-grid { grid-template-columns: 1fr; }
+    .container { padding: 1.5rem 1rem 3rem; }
+    .logo-area h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="logo-area">
+      <h1>Quiz <em>Agrégation</em></h1>
+      <p>Contre-option Secteur A · TP Tableau · Annales</p>
+    </div>
+    <div class="header-badge">SVT / SV-STU · 2025–2026</div>
+  </header>
+
+  <!-- NAV -->
+  <nav class="top-nav">
+    <button class="nav-btn active" onclick="showTab('home')" id="nav-home">Accueil</button>
+    <button class="nav-btn" onclick="showTab('fiches')" id="nav-fiches">Fiches de révision</button>
+  </nav>
+
+  <!-- ═══ SCREEN HOME ═══ -->
+  <div id="screen-home" class="screen active">
+    <p class="section-label">Choisir un mode</p>
+    <div class="mode-grid">
+      <div class="mode-card" onclick="startGame('solo')">
+        <div class="m-icon">🔬</div>
+        <div class="m-title">Solo</div>
+        <div class="m-desc">Toutes les questions + corrections détaillées</div>
+      </div>
+      <div class="mode-card" onclick="startGame('duo')">
+        <div class="m-icon">⚗️</div>
+        <div class="m-title">Duo</div>
+        <div class="m-desc">2 joueurs en alternance — lequel connaît le mieux son cours ?</div>
+      </div>
+      <div class="mode-card" onclick="startGame('speed')">
+        <div class="m-icon">⚡</div>
+        <div class="m-title">Vitesse</div>
+        <div class="m-desc">15 sec · bonus rapidité · 20 questions</div>
+      </div>
+    </div>
+    <p class="section-label">Thèmes couverts (annales)</p>
+    <div class="tags-area">
+      <span class="tag">Hémoglobine / Myoglobine</span>
+      <span class="tag">Structure des protéines</span>
+      <span class="tag">Effet Bohr</span>
+      <span class="tag">Coopérativité / Hill</span>
+      <span class="tag">SDS-PAGE</span>
+      <span class="tag">Western blot</span>
+      <span class="tag">Cinétique Michaelis-Menten</span>
+      <span class="tag">Lineweaver-Burk</span>
+      <span class="tag">Beer-Lambert</span>
+      <span class="tag">Chromatographie</span>
+      <span class="tag">Gel ADN / PCR</span>
+      <span class="tag">Centrifugation différentielle</span>
+      <span class="tag">Calculs pH / Henderson</span>
+      <span class="tag">Inhibiteurs enzymatiques</span>
+      <span class="tag">Drépanocytose</span>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN QUIZ ═══ -->
+  <div id="screen-quiz" class="screen">
+    <div class="prog-bar"><div class="prog-fill" id="prog"></div></div>
+    <div class="duo-banner" id="duo-banner" style="display:none"></div>
+    <div class="timer-wrap" id="timer-wrap" style="display:none"><div class="timer-fill" id="timer-fill"></div></div>
+    <div class="quiz-stats">
+      <div class="chip">Q&nbsp;<span id="qnum">1</span></div>
+      <div class="chip">Score&nbsp;<span id="sc">0</span></div>
+      <div class="chip" id="t-chip" style="display:none">⏱&nbsp;<span id="t-txt">15</span>s</div>
+    </div>
+    <div class="q-meta">
+      <span class="cat-badge" id="qcat">—</span>
+      <span class="src-badge" id="qsrc">—</span>
+    </div>
+    <p class="q-text" id="qtxt"></p>
+    <div class="ans-grid" id="ans-grid"></div>
+    <div class="exp-box" id="expbox"></div>
+    <div class="btn-row">
+      <button class="btn-primary next-btn" id="next-btn" onclick="nextQ()">Suivant →</button>
+      <button class="btn-secondary" onclick="confirmQuit()">Quitter</button>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN RESULTS ═══ -->
+  <div id="screen-results" class="screen">
+    <p class="section-label" id="res-label">Résultats</p>
+    <div class="score-card" id="score-card"></div>
+    <div class="res-list" id="res-list"></div>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="showTab('home')">Rejouer</button>
+      <button class="btn-secondary" onclick="showTab('fiches')">Fiches de révision</button>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN FICHES ═══ -->
+  <div id="screen-fiches" class="screen">
+    <p class="section-label">Fiches de révision</p>
+    <div class="fiche-tabs" id="fiche-tabs"></div>
+    <div class="fiche-card" id="fiche-body"></div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// DATA — FICHES
+// ═══════════════════════════════════════
+const FICHES = [
+  {
+    t: "Hémoglobine & Myoglobine",
+    html: `
+<div class="fiche-section">
+  <div class="fiche-h3">Structure de l'hémoglobine (HbA) — tombé presque chaque année</div>
+  <div class="fiche-p">Protéine <strong>tétramérique</strong> : 2 chaînes α (141 aa) + 2 chaînes β (146 aa). Chaque sous-unité porte un <strong>groupement prosthétique hème</strong> (porphyrine + Fe²⁺). PM total ≈ <strong>64 500 Da</strong>. 4 sites de fixation de l'O₂.</div>
+  <span class="fiche-key">Structure quaternaire</span><span class="fiche-key">4 hèmes</span><span class="fiche-key">2α + 2β</span>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Myoglobine (Mb) — comparaison</div>
+  <div class="fiche-p">Monomère, 1 seule chaîne, 153 aa, PM ≈ 17 000 Da. 1 seul hème. Stockage O₂ dans le muscle. Courbe de saturation <strong>hyperbolique</strong>. P₅₀ ≈ 1 mmHg.</div>
+  <div class="fiche-alert">⚠ Hb = courbe sigmoïde (coopérativité) | Mb = courbe hyperbolique (pas de coopérativité)</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Coopérativité — Coefficient de Hill</div>
+  <div class="fiche-p">Fixation d'O₂ sur une sous-unité → changement conformationnel T (tendu, déoxy) → R (relaxed, oxy) → ↑ affinité des autres sous-unités.</div>
+  <div class="fiche-formula">Y = pO₂ⁿ / (P₅₀ⁿ + pO₂ⁿ)   [Hill]   h(Hb) ≈ 2,8 | h(Mb) = 1</div>
+  <div class="fiche-tip">✓ h > 1 = coopérativité | h = 1 = sites indépendants (Mb) | h = nb sites = coopérativité maximale</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Effet Bohr — tombé systématiquement</div>
+  <div class="fiche-p">Dans les tissus actifs : ↑ CO₂ + ↑ H⁺ → H⁺ se fixe sur His β146 → stabilise état T → ↓ affinité Hb pour O₂ → libère O₂ là où besoin. Courbe de saturation <strong>décalée vers la droite</strong> (↑ P₅₀).</div>
+  <div class="fiche-tip">✓ "Décrivez et expliquez le décalage à droite" = Effet Bohr. Mécanisme moléculaire exigé !</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">2,3-BPG & HbF</div>
+  <div class="fiche-p">2,3-bisphosphoglycérate se fixe dans la cavité centrale (entre les 2 chaînes β) → stabilise état T → ↓ affinité. HbF (α₂γ₂) lie moins le BPG que HbA → <strong>HbF plus forte affinité O₂</strong> → capture O₂ de la mère à travers le placenta.</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Drépanocytose — électrophorèse Hb</div>
+  <div class="fiche-p">Mutation β6 : <strong>Glu → Val</strong>. HbS moins anionique que HbA → migre moins loin vers l'anode à pH 8,6. Hétérozygote AS = 2 bandes. À l'état désoxy : Val hydrophobe → polymérisation → falciformation des GR.</div>
+  <span class="fiche-key">GAG→GTG</span><span class="fiche-key">HbA migre plus loin que HbS</span>
+</div>`
+  },
+  {
+    t: "SDS-PAGE & Western Blot",
+    html: `
+<div class="fiche-section">
+  <div class="fiche-h3">Principe SDS-PAGE (Laemmli)</div>
+  <div class="fiche-p">SDS (~1,4 g/g protéine) dénature + charge négative uniforme → migration selon <strong>masse seule</strong>. Chauffage 95°C + DTT/β-mercaptoéthanol rompt les ponts disulfure. Gel de compression (pH 6,8) concentre → gel de séparation (pH 8,8) résout.</div>
+  <div class="fiche-formula">Rf = distance protéine / distance front   (entre 0 et 1)</div>
+  <div class="fiche-formula">Droite étalon : log(PM) = a·Rf + b  →  PM = 10^(valeur lue) en kDa</div>
+  <div class="fiche-alert">⚠ Petites masses → Rf élevé (migrent loin) | Grosses masses → Rf faible (restent en haut)</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Calcul de PM — méthode annale</div>
+  <div class="fiche-p">1) Mesurer distance de migration de chaque bande du ladder → calculer Rf → tracer log(PM) = f(Rf).<br>2) Mesurer Rf de la bande inconnue → lire log(PM) sur la droite → PM = 10^(log PM).</div>
+  <div class="fiche-tip">✓ Droite bien calibrée : r² > 0,99. NE jamais extrapoler en dehors de la gamme du ladder.</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Western Blot — ordre des étapes</div>
+  <div class="fiche-p"><strong>1</strong> SDS-PAGE → <strong>2</strong> Transfert (PVDF ou nitrocellulose) → <strong>3</strong> Blocage (lait 5% ou BSA 5%) → <strong>4</strong> AC primaire (overnight 4°C) → <strong>5</strong> Lavages × 3 → <strong>6</strong> AC secondaire couplé HRP → <strong>7</strong> Lavages → <strong>8</strong> Révélation ECL</div>
+  <div class="fiche-alert">⚠ Phosphoprotéine : utiliser BSA (pas de lait → caséines phosphorylées = bruit de fond !)</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Contrôles obligatoires</div>
+  <div class="fiche-p">- <strong>Contrôle de charge</strong> : β-actine (42 kDa), GAPDH, α-tubuline → normalisation<br>- <strong>Isotype contrôle</strong> : IgG non immunes (même espèce, même concentration) → fixations non spécifiques<br>- <strong>Input</strong> : extrait total avant immunoprécipitation</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Interprétations classiques d'annale</div>
+  <div class="fiche-p">Bande plus haute → glycosylation, ubiquitination, phosphorylations multiples.<br>Bande plus basse → clivage protéolytique, isoforme tronquée, protéine dégradée.<br>Double bande → isoforme ou PTM partielle.</div>
+  <div class="fiche-alert">⚠ COMMANDE CRITIQUE : inhibiteurs de protéases + travail à 4°C sur glace → sans ça le TP est invalidé</div>
+</div>`
+  },
+  {
+    t: "Cinétique enzymatique",
+    html: `
+<div class="fiche-section">
+  <div class="fiche-h3">Équation de Michaelis-Menten</div>
+  <div class="fiche-formula">v = Vmax × [S] / (Km + [S])</div>
+  <div class="fiche-p">- <strong>Km</strong> = [S] pour v = Vmax/2 → faible Km = forte affinité<br>- <strong>Vmax</strong> = vitesse maximale à saturation<br>- <strong>kcat</strong> = Vmax / [Etot] = turnover number (molécules substrat / enzyme / s)</div>
+  <span class="fiche-key">Km ↓ = affinité ↑</span><span class="fiche-key">kcat/Km = efficacité catalytique</span>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Lineweaver-Burk (double réciproque)</div>
+  <div class="fiche-formula">1/v = (Km/Vmax) × (1/[S]) + 1/Vmax</div>
+  <div class="fiche-p">- Ordonnée à l'origine → <strong>1/Vmax</strong><br>- Abscisse à l'origine → <strong>−1/Km</strong><br>- Pente = Km/Vmax</div>
+  <div class="fiche-alert">⚠ Amplification des erreurs aux faibles [S] (1/[S] très grand). Méthode graphique biaisée.</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Types d'inhibition — très tombé aux annales</div>
+  <div class="fiche-p"><strong>Compétitif</strong> : fixation au site actif, compète avec [S]. Km apparent ↑, Vmax inchangé. Sur LB : droites se croisent sur l'axe Y (même 1/Vmax). Levable par ↑[S].</div>
+  <div class="fiche-p"><strong>Non compétitif</strong> : fixation sur site allostérique ≠ site actif. Vmax ↓, Km inchangé. Sur LB : droites parallèles (même pente).</div>
+  <div class="fiche-p"><strong>Incompétitif</strong> : fixation uniquement au complexe E-S. Km et Vmax ↓ proportionnellement. Sur LB : droites parallèles mais décalées vers le haut.</div>
+  <div class="fiche-tip">✓ Mnémo LB : Compétitif = croisent l'axe Y | Non-compétitif = parallèles</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Enzymes allostériques</div>
+  <div class="fiche-p">Courbe v = f([S]) sigmoïde (comme l'Hb pour O₂). Coefficient de Hill h > 1. Effecteurs allostériques (+) ou (−) modifient la forme de la courbe (état R ↔ T, modèle de Monod-Wyman-Changeux).</div>
+</div>`
+  },
+  {
+    t: "Chromatographie",
+    html: `
+<div class="fiche-section">
+  <div class="fiche-h3">Exclusion stérique (gel filtration)</div>
+  <div class="fiche-p">Ordre de sortie : <strong>grandes molécules en premier</strong> (exclues des pores → V₀), puis petites molécules (entrent dans les pores → Ve > V₀).</div>
+  <div class="fiche-formula">Kav = (Ve − V₀) / (Vt − V₀)   [entre 0 et 1]</div>
+  <div class="fiche-p">Droite étalon log(PM) = f(Kav) → détermine le PM de l'inconnu.</div>
+  <div class="fiche-alert">⚠ NE sépare PAS selon la charge — sépare selon la taille / forme globulaire de la protéine</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Échangeuse d'ions</div>
+  <div class="fiche-p">- <strong>Échangeuse de cations (CM, SP — charges −)</strong> : retient protéines cationiques (pI > pH tampon).<br>- <strong>Échangeuse d'anions (DEAE, Q — charges +)</strong> : retient protéines anioniques (pI < pH tampon).<br>- Élution : gradient de sel NaCl croissant (compétition ionique).</div>
+  <div class="fiche-tip">✓ Règle : pI > pH → protéine (+) → retenue sur échangeuse de cations (résine −)</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Affinité — His-tag sur résine Ni-NTA</div>
+  <div class="fiche-p">His-tag (6×His) coordonne les ions Ni²⁺ de la résine. Élution par gradient d'<strong>imidazole croissant</strong> (0 → 500 mM) : l'imidazole compète avec les His pour le Ni²⁺. Dialyse post-purification pour éliminer l'imidazole.</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Lecture d'un chromatogramme (annale)</div>
+  <div class="fiche-p">Sur un profil A₂₈₀ = f(volume ou fractions) : identifier le pic du volume mort (non retenu), puis les pics d'élution spécifiques. Toujours vérifier la pureté des fractions par SDS-PAGE après collecte.</div>
+</div>`
+  },
+  {
+    t: "Beer-Lambert & Dosages",
+    html: `
+<div class="fiche-section">
+  <div class="fiche-h3">Loi de Beer-Lambert</div>
+  <div class="fiche-formula">A = ε × l × c</div>
+  <div class="fiche-p">- <strong>A</strong> = absorbance (sans unité) — zone linéaire : 0,1 < A < 1,5<br>- <strong>ε</strong> = coefficient d'extinction molaire (L·mol⁻¹·cm⁻¹) — spécifique de la molécule ET de λ<br>- <strong>l</strong> = trajet optique (cm) — souvent 1 cm<br>- <strong>c</strong> = concentration (mol/L)</div>
+  <div class="fiche-formula">c = A / (ε × l)   [mol/L]</div>
+  <div class="fiche-alert">⚠ Si A > 1,5 : diluer l'échantillon et multiplier par le facteur de dilution au final</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Bradford (595 nm)</div>
+  <div class="fiche-p">Coomassie BBG-250 : libre = rouge (465 nm) → lié aux protéines = bleu (595 nm). Rapide, peu linéaire à forte concentration. Sensible aux détergents SDS, Triton. Gamme étalon BSA obligatoire.</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">BCA / Lowry (562 nm)</div>
+  <div class="fiche-p">Réduction Cu²⁺ → Cu⁺ par liaisons peptidiques (Biuret), puis BCA chélate Cu⁺ → complexe violet. Plus sensible que Bradford. Compatible avec la plupart des détergents. Sensible aux réducteurs (DTT, β-ME).</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Calculs classiques d'annale</div>
+  <div class="fiche-p"><strong>Concentration :</strong> A = 0,622 ; ε(NADH,340) = 6 220 L·mol⁻¹·cm⁻¹ ; l = 1 cm → c = 0,622/6220 = 10⁻⁴ mol/L</div>
+  <div class="fiche-p"><strong>Masse à peser :</strong> 50 mM Tris dans 250 mL (M = 121,1 g/mol) → m = 0,05 × 0,25 × 121,1 = <strong>1,51 g</strong></div>
+  <div class="fiche-p"><strong>Gamme étalon + dilution :</strong> c = (A − intercept)/pente → × facteur de dilution total</div>
+</div>`
+  },
+  {
+    t: "pH & Tampons",
+    html: `
+<div class="fiche-section">
+  <div class="fiche-h3">Henderson-Hasselbalch</div>
+  <div class="fiche-formula">pH = pKa + log([A⁻] / [AH])</div>
+  <div class="fiche-p">- Si pH = pKa → [A⁻] = [AH] → rapport = 1 → zone tampon optimale (±1 unité autour du pKa)<br>- Chaque unité de pH au-dessus du pKa : rapport × 10<br>- Chaque unité en dessous : rapport ÷ 10</div>
+  <div class="fiche-tip">✓ PBS (pH 7,4) : phosphate pKa₂ = 7,2 → rapport [HPO₄²⁻]/[H₂PO₄⁻] = 10^0,2 ≈ 1,58</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Calculs fréquents en annale</div>
+  <div class="fiche-p"><strong>Tampon acétate pH 5,76, pKa = 4,76 :</strong> log([A⁻]/[AH]) = 5,76 − 4,76 = 1 → rapport = 10</div>
+  <div class="fiche-p"><strong>Tampon phosphate pH 7,6, pKa = 7,2 :</strong> rapport = 10^(7,6−7,2) = 10^0,4 ≈ 2,51</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">pI et charge des protéines</div>
+  <div class="fiche-p">Au pI : charge nette = 0 → pas de migration en IEF (isoélectrofocalisation).<br><strong>pH > pI</strong> → protéine anionique (−) → retenue par échangeuse d'anions.<br><strong>pH < pI</strong> → protéine cationique (+) → retenue par échangeuse de cations.</div>
+  <span class="fiche-key">pH > pI = protéine chargée négativement</span>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Gel 2D (IEF + SDS-PAGE)</div>
+  <div class="fiche-p">1ère dimension : IEF sur gradient de pH immobilisé (IPG strip) → séparation selon le pI.<br>2ème dimension : SDS-PAGE → séparation selon la masse.<br>Permet de séparer des milliers de protéines sur un même gel.</div>
+</div>`
+  },
+  {
+    t: "Gel ADN & PCR",
+    html: `
+<div class="fiche-section">
+  <div class="fiche-h3">Migration en gel d'agarose</div>
+  <div class="fiche-p">ADN chargé (−) grâce aux phosphates → migre vers l'<strong>anode (+)</strong>. Petits fragments passent mieux dans les pores → migrent plus loin. Tampon TAE (Tris-Acétate-EDTA) ou TBE.</div>
+  <div class="fiche-formula">0,5–1% agarose : grands fragments (>2 kb) | 2–3% : petits fragments (<500 pb)</div>
+  <div class="fiche-alert">⚠ BET (bromure d'éthidium) : mutagène, gants obligatoires. Intercalant → fluoresce sous UV 302 nm.</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">PCR — paramètres critiques</div>
+  <div class="fiche-p">Tm (°C) ≈ 2(A+T) + 4(G+C). Ta = Tm − 5°C.<br>Cycle : <strong>Dénaturation</strong> 94-95°C → <strong>Hybridation</strong> Ta → <strong>Élongation</strong> 72°C (1 min/kb avec Taq).</p>
+  <div class="fiche-alert">⚠ Ta trop basse → bandes parasites multiples | Ta trop haute → pas de produit | Petite bande ~100 pb = dimères d'amorces</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Électrophorèse Hb (annale très fréquente)</div>
+  <div class="fiche-p">Tampon véronal pH 8,6 (alcalin) : <strong>HbA migre plus loin vers l'anode que HbS</strong>. Raison : HbS a Val (neutre) au lieu de Glu (−) en β6 → HbS moins anionique → moins attirée par l'anode. Profil : AA = 1 bande rapide | SS = 1 bande lente | AS = 2 bandes.</div>
+  <div class="fiche-tip">✓ À retenir : HbA plus rapide que HbS à pH alcalin</div>
+</div>
+<div class="fiche-section">
+  <div class="fiche-h3">Centrifugation différentielle</div>
+  <div class="fiche-p">Ordre : <strong>600×g</strong> (débris, noyaux) → <strong>3 000–10 000×g</strong> (mitochondries) → <strong>20 000×g</strong> (lysosomes, peroxysomes) → <strong>100 000×g</strong> (microsomes, ribosomes) → surnageant = cytosol.</div>
+  <span class="fiche-key">g croissants → compartiments de plus en plus légers</span>
+</div>`
+  }
+];
+
+// ═══════════════════════════════════════
+// DATA — QUESTIONS
+// ═══════════════════════════════════════
+const QS = [
+  {c:"Hémoglobine",s:"Structure — annale type",q:"L'hémoglobine adulte (HbA) est une protéine :",a:["Tétramérique : 2 sous-unités α + 2 sous-unités β, chacune portant un hème avec Fe²⁺","Monomérique : 1 seule chaîne polypeptidique comme la myoglobine","Dimérique : 2 sous-unités α identiques portant chacune 2 hèmes","Tétramérique α₂β₂, mais sans groupement prosthétique hème"],ok:0,e:"HbA adulte = α₂β₂ (tétramère). PM ≈ 64 500 Da. 4 hèmes = 4 sites de fixation O₂. Groupement prosthétique hème = porphyrine + Fe²⁺ (Fe³⁺ = méthémoglobine, ne fixe pas O₂). La myoglobine, elle, est monomère (1 hème, PM ≈ 17 000 Da)."},
+  {c:"Hémoglobine",s:"Coopérativité — annale",q:"La courbe de saturation en O₂ de l'hémoglobine est de forme sigmoïde. Qu'est-ce que cela indique et quel est l'avantage physiologique ?",a:["Coopérativité : fixation d'O₂ sur une sous-unité augmente l'affinité des autres → libération efficace d'O₂ dans les tissus","Inhibition compétitive de l'O₂ par le CO₂ aux concentrations physiologiques","La forme sigmoïde traduit simplement 4 sites de fixation indépendants","Réponse hyperbolique amplifiée par les 4 sous-unités"],ok:0,e:"La sigmoïdité est la signature de la coopérativité homotrope. Coefficient de Hill h ≈ 2,8 pour HbA. Avantage : charge complète aux poumons (pO₂ élevée, état R) et décharge efficace dans les tissus (pO₂ basse → passage R→T). La myoglobine (h=1, courbe hyperbolique) n'a pas de coopérativité."},
+  {c:"Hémoglobine",s:"Effet Bohr — tombé systématiquement",q:"Un graphe montre deux courbes de saturation Hb : courbe A à pH 7,4 et courbe B à pH 7,2 (décalée vers la droite). Quelle est l'explication physico-chimique de ce décalage ?",a:["Effet Bohr : H⁺ et CO₂ stabilisent l'état T (désoxygéné), diminuant l'affinité pour O₂ → libération d'O₂ dans les tissus acidifiés","Le pH acide dénature partiellement l'Hb et bloque ses sites","La courbe B correspond à HbF fœtale qui a moins d'affinité","Le CO₂ entre en compétition directe avec l'O₂ sur le site hème"],ok:0,e:"Effet Bohr : dans les tissus actifs, respiration → ↑CO₂ → H₂CO₃ → HCO₃⁻ + H⁺. H⁺ se fixe sur His β146 → rupture des ponts salins → stabilise forme T → ↑P₅₀ → libération d'O₂. Inverse aux poumons. Le CO₂ forme aussi des carbaminates sur les NH₂ terminaux. Décalage à droite = ↓ affinité."},
+  {c:"Hémoglobine",s:"HbF vs HbA — annale",q:"L'hémoglobine fœtale (HbF = α₂γ₂) a une courbe de saturation décalée à gauche par rapport à HbA (α₂β₂). Quelle est la raison moléculaire ?",a:["HbF lie moins le 2,3-BPG (les chaînes γ fixent moins le BPG que les chaînes β) → HbF reste en état R → ↑ affinité O₂","HbF a un coefficient de Hill supérieur à 4 (hypercoopérativité)","HbF n'a pas de groupement hème fonctionnel","HbF est plus acide (pI plus bas), ce qui augmente l'affinité"],ok:0,e:"Les chaînes γ de HbF lient beaucoup moins bien le 2,3-BPG que les chaînes β de HbA. Le 2,3-BPG stabilise l'état T (↓ affinité). HbF sans BPG = surtout état R = ↑ affinité O₂. Avantage fœtal : HbF récupère l'O₂ de HbA maternelle à travers le placenta."},
+  {c:"Hémoglobine",s:"Drépanocytose — électrophorèse",q:"Sur un gel d'électrophorèse de l'Hb (pH alcalin 8,6), HbA migre plus loin vers l'anode que HbS. Quelle est la raison moléculaire ?",a:["Mutation β6 Glu→Val : HbS moins anionique (Val neutre vs Glu chargé −) → moins attirée par l'anode (+)","HbS est plus grande (PM plus élevé) → migre moins loin","HbA est tétramérique et HbS dimérique dans ces conditions","Le BPG présent dans HbS ralentit sa migration"],ok:0,e:"Mutation HbS : codon GAG → GTG → Glu (chargé −, pKa 4,1) → Val (neutre apolaire). HbS a une charge nette moins négative à pH 8,6 → moins attirée vers l'anode. À l'état désoxy, Val hydrophobe → polymérisation HbS → falciformation des globules rouges."},
+  {c:"SDS-PAGE",s:"Interprétation gel — annale",q:"Sur un gel SDS-PAGE, une protéine montre une bande à 70 kDa apparent alors que sa séquence prédit 52 kDa. L'échantillon a été chauffé sans réducteur. La cause la plus probable est :",a:["Sans réducteur (DTT/β-ME), les ponts disulfure inter-chaînes persistent → la protéine migre sous forme de dimère non dissocié (~52+52 kDa réduit)","Le gel est mal polymérisé","L'anticorps du Western blot reconnaît une protéine de 70 kDa différente","Le tampon de charge ne contenait pas de bleu de bromophénol"],ok:0,e:"Sans agent réducteur, les ponts S-S ne sont pas rompus. Si la protéine est un dimère lié par un pont inter-chaîne, elle migre comme un complexe de ~104 kDa. Ici, la différence de ~18 kDa évoque aussi une glycosylation. Contrôle : répéter avec + DTT → si bande à 52 kDa → confirms clivage S-S."},
+  {c:"SDS-PAGE",s:"Calcul Rf et PM",q:"Droite étalon : log(PM [kDa]) = −1,5 × Rf + 2,4. Une bande inconnue a Rf = 0,55. Quel est le PM ?",a:["log(PM) = −1,5 × 0,55 + 2,4 = 1,575 → PM = 10^1,575 ≈ 37,6 kDa","PM = 45 kDa","PM = 120 kDa","PM = 100 kDa"],ok:0,e:"Méthode : 1) Appliquer l'équation de droite avec le Rf mesuré → log(PM) = −1,5 × 0,55 + 2,4 = −0,825 + 2,4 = 1,575. 2) PM = antilog = 10^1,575 ≈ 37,6 kDa. Attention aux unités : si la droite est construite en kDa, le résultat est en kDa. Ne jamais extrapoler hors de la gamme du ladder."},
+  {c:"SDS-PAGE",s:"Commande critique — annale",q:"Avant de réaliser un SDS-PAGE d'un extrait cellulaire total, quelle précaution est absolument indispensable et ne peut être omise ?",a:["Ajouter des inhibiteurs de protéases au tampon de lyse et travailler à 4°C pour éviter la dégradation protéique","Dépolymériser l'actine par chauffage à 56°C","Utiliser un tampon alcalin (pH > 9) pour dénaturer les enzymes lysosomales","Centrifuger 100 000 g avant le dépôt pour éliminer tous les organites"],ok:0,e:"CRITIQUE : sans inhibiteurs de protéases (PMSF, cocktail Roche/Sigma) et sans froid (4°C, glace), les protéases libérées à la lyse dégradent immédiatement les protéines d'intérêt. Le patron de bandes obtenu est alors non représentatif. C'est LE point que le jury souligne systématiquement."},
+  {c:"Western Blot",s:"Ordre des étapes",q:"Quelle est l'erreur dans ce protocole : SDS-PAGE → transfert → AC1 → AC2-HRP → blocage → ECL ?",a:["Le blocage doit être fait AVANT l'AC primaire (et non après) : il sature les sites non spécifiques avant l'ajout de l'AC1","L'ECL doit être réalisé avant l'AC secondaire","Le transfert se fait après la révélation ECL","L'AC secondaire doit précéder l'AC primaire"],ok:0,e:"Ordre correct : SDS-PAGE → transfert → BLOCAGE (1 h, lait 5% ou BSA) → AC1 (primaire, overnight 4°C) → lavages × 3 → AC2 (secondaire-HRP) → lavages → ECL. Le blocage AVANT l'AC1 est essentiel : il sature les sites d'adsorption non spécifiques de la membrane. Sans blocage, l'AC1 se fixe partout → bruit de fond énorme → gel ininterprétable."},
+  {c:"Western Blot",s:"Contrôle de charge",q:"Sur un WB montrant une protéine d'intérêt apparemment surexprimée dans la condition A vs B, le jury demande le contrôle indispensable. La bonne réponse est :",a:["Contrôle de charge (β-actine ou GAPDH) : vérifie que les quantités déposées sont identiques et que la différence reflète une vraie variation d'expression","Un contrôle négatif avec anticorps anti-GFP pour tester la spécificité","Une dilution au 1/1000 de l'extrait pour vérifier la linéarité","Un gel SDS-PAGE coloré au bleu de Coomassie en parallèle"],ok:0,e:"Réponse attendue à l'agrégation : le contrôle de charge (β-actine, GAPDH, α-tubuline, Ponceau S) permet de normaliser le signal. Formule : intensité POI / intensité β-actine pour chaque piste. Si les pistes sont inégalement chargées, la différence d'expression est un artefact. La normalisation est EXIGÉE pour toute conclusion quantitative."},
+  {c:"Cinétique",s:"Lecture courbe MM",q:"Sur une courbe de Michaelis-Menten, le plateau est atteint à v = 120 nmol/min. La vitesse à [S] = 8 mM est v = 60 nmol/min. Quelle est la valeur du Km ?",a:["Km = 8 mM (car v = Vmax/2 = 60 nmol/min correspond à [S] = 8 mM)","Km = 60 nmol/min","Km = 4 mM","Km = 120 nmol/min"],ok:0,e:"Par définition : Km est la [S] pour laquelle v = Vmax/2. Ici Vmax = 120 nmol/min → Vmax/2 = 60 nmol/min → [S] = 8 mM = Km. Le Km a l'unité d'une concentration (mol/L, mM…). Il ne s'exprime PAS en nmol/min (qui est une unité de vitesse)."},
+  {c:"Cinétique",s:"Lineweaver-Burk",q:"Deux droites de Lineweaver-Burk sont PARALLÈLES, et l'ordonnée à l'origine est plus élevée avec l'inhibiteur (1/Vmax ↑). Quel type d'inhibiteur ?",a:["Non compétitif : Vmax ↓ (1/Vmax ↑), Km inchangé (même abscisse à l'origine −1/Km) → droites parallèles","Compétitif : Km ↑, Vmax inchangé → droites convergent sur l'axe Y","Incompétitif : Km et Vmax ↓ → droites parallèles décalées","Irréversible : Vmax = 0, pas d'activité résiduelle"],ok:0,e:"Sur LB : droites parallèles = même pente = même Km/Vmax. Si Vmax ↓ et Km constant, alors Km/Vmax ↑ → pente ↑ mais l'intersection sur l'axe X (−1/Km) ne bouge pas. L'ordonnée à l'origine (1/Vmax) augmente = Vmax ↓. Signature du non-compétitif (site allostérique). Mémotechnique : NON compétitif = droites PArallèles."},
+  {c:"Cinétique",s:"Calcul kcat",q:"[Etot] = 10 nM, Vmax = 0,5 μmol·min⁻¹·mL⁻¹. Calculer kcat en s⁻¹.",a:["kcat = Vmax/[E] = 5×10⁻⁷/(10⁻⁸) = 50 min⁻¹ = 0,83 s⁻¹","kcat = 500 s⁻¹","kcat = 5 s⁻¹","kcat = 50 s⁻¹"],ok:0,e:"kcat = Vmax / [Etot]. Unités : Vmax = 0,5×10⁻⁶ mol·min⁻¹·mL⁻¹ = 5×10⁻⁷ mol·min⁻¹·mL⁻¹. [E] = 10×10⁻⁹ mol·mL⁻¹ = 10⁻⁸ mol·mL⁻¹. kcat = 5×10⁻⁷ / 10⁻⁸ = 50 min⁻¹ = 50/60 ≈ 0,83 s⁻¹. L'efficacité catalytique = kcat/Km (M⁻¹·s⁻¹, limite de diffusion ≈ 10⁸–10⁹)."},
+  {c:"Chromatographie",s:"Exclusion stérique",q:"Une solution contenant des protéines de 200 kDa, 50 kDa et 10 kDa est déposée sur une colonne d'exclusion stérique. Dans quel ordre sortent-elles ?",a:["200 kDa sort en premier (V₀, exclue des pores), puis 50 kDa, puis 10 kDa en dernier (entre le plus dans les pores)","10 kDa en premier, puis 50 kDa, puis 200 kDa en dernier","L'ordre dépend du pI des protéines, pas de leur taille","Toutes sortent simultanément"],ok:0,e:"Exclusion stérique : les molécules plus grandes que le seuil d'exclusion de la résine sont exclues des pores → elles ressortent en premier avec le volume mort V₀. Les petites molécules pénètrent dans les pores et passent plus de temps dans la colonne → sortent après les grandes. Ordre de sortie : grand → moyen → petit."},
+  {c:"Chromatographie",s:"Échangeuse d'ions",q:"On utilise une résine DEAE-Sepharose (échangeuse d'anions, charges +) à pH 7. Une protéine a pI = 5,5. Est-elle retenue ?",a:["Oui : pH 7 > pI 5,5 → protéine anionique (−) → retenue par la résine chargée (+)","Non : pH 7 > pI → protéine cationique → repoussée","Oui, mais seulement si [NaCl] > 150 mM dans le tampon d'équilibration","Non : les résines DEAE retiennent uniquement les protéines basiques (pI > 9)"],ok:0,e:"Règle : si pH > pI → protéine chargée (−) = anionique. DEAE (diéthylaminoéthyle) = échangeuse d'anions (charges +). Elle retient les protéines anioniques. Ici pH 7 > pI 5,5 → protéine chargée − → retenue. Élution par gradient NaCl croissant : le Cl⁻ compète avec la protéine pour les sites DEAE."},
+  {c:"Chromatographie",s:"Affinité His-tag",q:"Après purification His-tag sur Ni-NTA, la protéine est retrouvée dans le flow-through (non retenue). Cause la plus probable :",a:["Le His-tag est inaccessible aux ions Ni²⁺ (repliement incorrect, His-tag masqué ou agrégats)","Le tampon d'équilibration est trop concentré en sel","La résine est surchargée en protéines sans His-tag","L'imidazole doit être ajouté en concentration décroissante"],ok:0,e:"His-tag inaccessible = cause la plus fréquente. Solutions : changer la position du His-tag (N-terminal vs C-terminal), utiliser des conditions dénaturantes (8M urée) si la protéine est insoluble, vérifier l'expression du tag par WB anti-His. Autre cause : la protéine s'est exprimée sans le tag (délétion, codon stop précoce)."},
+  {c:"Beer-Lambert",s:"Calcul de concentration",q:"On dose le NADH : A₃₄₀ = 0,622, ε₃₄₀ = 6 220 L·mol⁻¹·cm⁻¹, l = 1 cm. Quelle est la concentration ?",a:["c = A/(ε×l) = 0,622/6220 = 1,0 × 10⁻⁴ mol/L","c = 6,22 × 10⁻³ mol/L","c = 3,87 × 10⁻³ mol/L","c = 1,0 × 10⁻⁵ mol/L"],ok:0,e:"c = A / (ε × l) = 0,622 / (6 220 × 1) = 10⁻⁴ mol/L. Le NADH absorbe à 340 nm (le NAD⁺ n'absorbe pas à 340 nm). C'est le principe du dosage d'activité des déhydrogénases : ΔA₃₄₀/min est proportionnel à la vitesse de production/consommation de NADH."},
+  {c:"Beer-Lambert",s:"Gamme étalon Bradford + dilution",q:"Droite étalon Bradford : A₅₉₅ = 0,015 × [BSA μg/mL] + 0,02. Échantillon dilué 1/10 : A₅₉₅ = 0,32. Concentration dans l'original ?",a:["c dil = (0,32−0,02)/0,015 = 20 μg/mL → × 10 = 200 μg/mL dans l'original","20 μg/mL","320 μg/mL","2000 μg/mL"],ok:0,e:"Étape 1 : interpoler sur la droite étalon → c dil = (A − ordonnée origine) / pente = (0,32 − 0,02) / 0,015 = 20 μg/mL. Étape 2 : multiplier par le facteur de dilution → c original = 20 × 10 = 200 μg/mL. Toujours revenir à la concentration d'ORIGINE en multipliant par le facteur de dilution total."},
+  {c:"PCR / Gel ADN",s:"Bandes parasites",q:"Après PCR, on observe la bande attendue à 500 pb + plusieurs bandes parasites. Quelle est la première mesure corrective ?",a:["Augmenter Ta (température d'hybridation) de 2 à 5°C pour améliorer la spécificité des amorces","Diminuer la température d'élongation de 72°C à 68°C","Ajouter plus de Taq polymérase dans la réaction","Augmenter le temps de dénaturation à 98°C"],ok:0,e:"Bandes parasites = hybridation non spécifique des amorces sur des sites autres que la cible → Ta trop basse. Augmenter Ta de 2-5°C améliore la spécificité (les appariements imparfaits sont déstabilisés). Autre cause : [MgCl₂] trop élevée (stabilise appariements non spécifiques) → réduire à 1,5-2 mM. Gradient de Ta optimal par PCR Touch-down."},
+  {c:"PCR / Gel ADN",s:"Direction de migration ADN",q:"Sur un gel d'agarose, dans quel sens migrent les fragments d'ADN et pourquoi ?",a:["Vers l'anode (+) : les groupements phosphate du squelette ADN sont chargés (−) à pH neutre → attirés vers le pôle positif","Vers la cathode (−) : l'ADN est chargé positivement grâce aux bases azotées","Vers l'anode si <1 kb, vers la cathode si >1 kb","La direction dépend du pH du tampon TAE ou TBE"],ok:0,e:"Les groupements phosphodiester du squelette ADN ont un pKa < 2 → entièrement ionisés à pH neutre = chargés (−). L'ADN migre donc vers l'anode (+). La densité de charge (−) par nucléotide est constante → c'est uniquement la taille qui détermine la vitesse de migration à travers les mailles du gel."},
+  {c:"Centrifugation",s:"Fractions cellulaires — annale",q:"Pour isoler les mitochondries par centrifugation différentielle, dans quel ordre réalise-t-on les centrifugations ?",a:["1) 600×g → débris et noyaux ; 2) 3 000–10 000×g → mitochondries ; 3) 100 000×g → microsomes","1) 100 000×g pour tout pelleter puis resuspension sélective","1) 3 000×g → mitochondries puis 2) 600×g → noyaux","Une seule centrifugation à 8 000×g suffit pour isoler les mitochondries pures"],ok:0,e:"Centrifugation différentielle = séquence de forces centrifuges croissantes. 600×g → culot : débris, noyaux, cellules entières. 3 000-10 000×g → culot : mitochondries (+lysosomes, peroxysomes). 20 000×g → lysosomes isolés. 100 000×g → culot : microsomes (fragments RE, Golgi, vésicules). Surnageant = cytosol. Pureté à vérifier par MET ou marqueurs biochimiques."},
+  {c:"Calculs",s:"Henderson-Hasselbalch",q:"Tampon phosphate (pKa₂ = 7,2) pour obtenir pH = 7,6. Quel est le rapport [HPO₄²⁻]/[H₂PO₄⁻] nécessaire ?",a:["10^(7,6−7,2) = 10^0,4 ≈ 2,51","10","0,4","1 (équimolaire)"],ok:0,e:"H-H : pH = pKa + log([A⁻]/[AH]). Donc log([A⁻]/[AH]) = pH − pKa = 7,6 − 7,2 = 0,4 → rapport = 10^0,4 ≈ 2,51. Pour préparer 100 mL : 2,51 mol HPO₄²⁻ pour 1 mol H₂PO₄⁻ (en volumes de solutions de même concentration). Vérification : si pH = pKa = 7,2 → rapport = 10^0 = 1."},
+  {c:"Calculs",s:"Préparation de solution",q:"On veut 250 mL de tampon Tris-HCl 50 mM (M(Tris) = 121,1 g/mol). Quelle masse de Tris peser ?",a:["m = C × V × M = 0,05 × 0,25 × 121,1 = 1,51 g","0,75 g","6,06 g","3,03 g"],ok:0,e:"m = n × M = C × V × M. C = 50 mM = 0,050 mol/L. V = 250 mL = 0,250 L. M = 121,1 g/mol. m = 0,050 × 0,250 × 121,1 = 1,514 g ≈ 1,51 g. Méthode pratique : peser dans un bécher, dissoudre dans ~200 mL d'eau MilliQ, ajuster le pH avec HCl concentré, puis compléter à 250,0 mL dans une fiole jaugée."}
+];
+
+// ═══════════════════════════════════════
+// APP STATE
+// ═══════════════════════════════════════
+let mode, curQ, score, scores, player, qs, answered, timerInterval, tLeft, hist;
+
+function shuffle(a) { return [...a].sort(() => Math.random() - 0.5); }
+function shuffleQ(q) {
+  const idx = shuffle([0,1,2,3]);
+  return { ...q, a: idx.map(i => q.a[i]), ok: idx.indexOf(q.ok) };
+}
+
+// ═══════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════
+function showTab(t) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('screen-' + t).classList.add('active');
+  if (document.getElementById('nav-' + t)) document.getElementById('nav-' + t).classList.add('active');
+  if (t === 'fiches') { buildFicheTabs(); showFiche(0); }
+}
+
+function confirmQuit() {
+  if (confirm('Quitter le quiz en cours ?')) showTab('home');
+}
+
+// ═══════════════════════════════════════
+// GAME
+// ═══════════════════════════════════════
+function startGame(m) {
+  mode = m; curQ = 0; score = 0; scores = [0,0]; player = 0; hist = [];
+  qs = shuffle(QS).slice(0, m === 'speed' ? 20 : QS.length).map(shuffleQ);
+  showTab('quiz');
+  showQ();
+}
+
+function showQ() {
+  if (curQ >= qs.length) { endGame(); return; }
+  const q = qs[curQ];
+  answered = false;
+
+  document.getElementById('prog').style.width = `${(curQ / qs.length) * 100}%`;
+  document.getElementById('qnum').textContent = `${curQ + 1} / ${qs.length}`;
+  document.getElementById('sc').textContent = mode === 'duo' ? `J1: ${scores[0]}  J2: ${scores[1]}` : score;
+  document.getElementById('qcat').textContent = q.c;
+  document.getElementById('qsrc').textContent = q.s;
+  document.getElementById('qtxt').textContent = q.q;
+
+  const expbox = document.getElementById('expbox');
+  expbox.style.display = 'none';
+  expbox.textContent = '';
+
+  const nextBtn = document.getElementById('next-btn');
+  nextBtn.style.display = 'none';
+  nextBtn.classList.add('next-btn');
+
+  const duoBanner = document.getElementById('duo-banner');
+  if (mode === 'duo') {
+    duoBanner.style.display = 'block';
+    duoBanner.textContent = `Tour du Joueur ${player + 1}`;
+  } else {
+    duoBanner.style.display = 'none';
+  }
+
+  const tw = document.getElementById('timer-wrap');
+  const tc = document.getElementById('t-chip');
+  if (mode === 'speed') {
+    tw.style.display = 'block'; tc.style.display = 'flex';
+    startTimer();
+  } else {
+    tw.style.display = 'none'; tc.style.display = 'none';
+  }
+
+  const grid = document.getElementById('ans-grid');
+  grid.innerHTML = '';
+  q.a.forEach((ans, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'ans-btn';
+    btn.textContent = ans;
+    btn.onclick = () => pick(i);
+    grid.appendChild(btn);
+  });
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  tLeft = 15;
+  updateTimer();
+  timerInterval = setInterval(() => {
+    tLeft--;
+    updateTimer();
+    if (tLeft <= 0) { clearInterval(timerInterval); if (!answered) pick(-1); }
+  }, 1000);
+}
+
+function updateTimer() {
+  document.getElementById('t-txt').textContent = tLeft;
+  const fill = document.getElementById('timer-fill');
+  fill.style.width = `${(tLeft / 15) * 100}%`;
+  fill.className = 'timer-fill' + (tLeft <= 5 ? ' urgent' : '');
+}
+
+function pick(idx) {
+  if (answered) return;
+  answered = true;
+  clearInterval(timerInterval);
+  const q = qs[curQ];
+  const isOk = idx === q.ok;
+
+  document.querySelectorAll('.ans-btn').forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.ok) btn.classList.add('correct');
+    else if (i === idx && !isOk) btn.classList.add('wrong');
+  });
+
+  if (isOk) {
+    if (mode === 'duo') scores[player]++;
+    else if (mode === 'speed') score += Math.max(1, tLeft);
+    else score++;
+  }
+  document.getElementById('sc').textContent = mode === 'duo' ? `J1: ${scores[0]}  J2: ${scores[1]}` : score;
+
+  const expbox = document.getElementById('expbox');
+  expbox.textContent = q.e;
+  expbox.style.display = 'block';
+
+  const nextBtn = document.getElementById('next-btn');
+  nextBtn.style.display = 'inline-block';
+  nextBtn.classList.remove('next-btn');
+
+  hist.push({ q: q.q, ok: isOk, ca: q.a[q.ok], ch: idx >= 0 ? q.a[idx] : 'Temps écoulé' });
+}
+
+function nextQ() {
+  if (mode === 'duo') player = 1 - player;
+  curQ++;
+  showQ();
+}
+
+function endGame() {
+  showTab('results');
+  const wrong = hist.filter(h => !h.ok);
+  const pct = Math.round(hist.filter(h => h.ok).length / hist.length * 100);
+
+  if (mode === 'duo') {
+    const title = scores[0] > scores[1] ? '🏆 Joueur 1 gagne !' : scores[1] > scores[0] ? '🏆 Joueur 2 gagne !' : '⚖️ Égalité !';
+    document.getElementById('res-label').textContent = title;
+    document.getElementById('score-card').innerHTML = `
+      <div class="duo-scores">
+        <div class="duo-score-box"><div class="score-big">${scores[0]}</div><div class="score-sub">Joueur 1</div></div>
+        <div style="color:var(--text3);font-size:20px;">vs</div>
+        <div class="duo-score-box"><div class="score-big">${scores[1]}</div><div class="score-sub">Joueur 2</div></div>
+      </div>`;
+  } else if (mode === 'speed') {
+    document.getElementById('res-label').textContent = 'Score vitesse';
+    document.getElementById('score-card').innerHTML = `
+      <div class="score-big">${score} pts</div>
+      <div class="score-sub">${pct}% de bonnes réponses · bonus rapidité inclus</div>`;
+  } else {
+    const em = pct >= 80 ? '🎯' : pct >= 60 ? '💪' : '📚';
+    document.getElementById('res-label').textContent = `${em} Résultats`;
+    document.getElementById('score-card').innerHTML = `
+      <div class="score-big">${score} <span style="font-size:28px;color:var(--text3)">/ ${hist.length}</span></div>
+      <div class="score-sub">${pct}% de réussite</div>`;
+  }
+
+  const rl = document.getElementById('res-list');
+  rl.innerHTML = '';
+  if (wrong.length) {
+    rl.innerHTML = `<div class="res-label">À revoir (${wrong.length} erreur${wrong.length > 1 ? 's' : ''}) :</div>`;
+    wrong.slice(0, 8).forEach(h => {
+      const d = document.createElement('div');
+      d.className = 'res-item';
+      d.innerHTML = `
+        <div class="res-q">${h.q.substring(0, 90)}${h.q.length > 90 ? '…' : ''}</div>
+        <div class="res-ok">✓ ${h.ca.substring(0, 70)}</div>
+        ${h.ch !== h.ca ? `<div class="res-no">✗ ${h.ch.substring(0, 70)}</div>` : ''}`;
+      rl.appendChild(d);
+    });
+  } else {
+    rl.innerHTML = '<p style="color:var(--accent);font-size:15px;margin:1rem 0;font-family:Fraunces,serif;font-style:italic">Parfait — toutes les réponses sont correctes !</p>';
+  }
+}
+
+// ═══════════════════════════════════════
+// FICHES
+// ═══════════════════════════════════════
+function buildFicheTabs() {
+  const container = document.getElementById('fiche-tabs');
+  container.innerHTML = '';
+  FICHES.forEach((f, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'ftab' + (i === 0 ? ' active' : '');
+    btn.textContent = f.t;
+    btn.onclick = () => showFiche(i);
+    container.appendChild(btn);
+  });
+}
+
+function showFiche(i) {
+  document.querySelectorAll('.ftab').forEach((t, j) => t.classList.toggle('active', i === j));
+  document.getElementById('fiche-body').innerHTML = `
+    <div class="fiche-h2">${FICHES[i].t}</div>
+    ${FICHES[i].html}`;
+}
+</script>
+</body>
+</html>
